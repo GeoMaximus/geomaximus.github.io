@@ -1,0 +1,2 @@
+2. make the modal work
+3. Add, Edit and Delete articles
