@@ -1,5 +1,5 @@
 const conainter = document.querySelector('.main');
-
+//GET REQUEST
 const renderArticles = async () => {
   let uri = 'http://localhost:3000/articles';
   const res = await fetch(uri);
@@ -33,6 +33,43 @@ const renderArticles = async () => {
 }
 
 window.addEventListener('DOMContentLoaded', () => renderArticles());
+
+//POST REQUEST
+const form = document.querySelector('.modal-content');
+
+const addArticle = async (e) => {
+  e.preventDefault();
+
+  const article = {
+    title: form.title.value,
+    tag: form.tag.value,
+    author: form.author.value,
+    date: form.date.value,
+    imgUrl: form.imgUrl.value,
+    content: form.content.value
+  }
+
+  await fetch('http:localhost:3000//articles', {
+    method: 'POST',
+    body: JSON.stringify(article),
+    headers: {'Content-Type': 'application/json'}
+});
+
+    window.location.replace('/index.html');
+
+}
+
+form.addEventListener('submit', addArticle);
+
+//DELETE REQUEST
+
+
+
+
+
+
+
+
 
 // // Get the modal
 // var modal = document.getElementById("myModal");

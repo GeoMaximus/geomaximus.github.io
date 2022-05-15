@@ -30,3 +30,13 @@ const renderArticle = async () => {
 }
 
 window.addEventListener('DOMContentLoaded', () => renderArticle());
+
+
+//DELETE REQUEST
+const deleteBtn = document.querySelector('#deleteBtn');
+deleteBtn.addEventListener('click', async (e) => {
+  const res = await fetch('http://localhost:3000/articles/' + id, {
+      method: 'DELETE'
+  })
+  window.location.replace('/index.html');
+})
