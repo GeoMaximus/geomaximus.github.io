@@ -225,6 +225,11 @@ function createArticle(article) {
   content.className = 'article-container';
   content.textContent = computeSummary(article.content);
   contentDiv.appendChild(content);
+  const readMore = document.createElement('a');
+  readMore.setAttribute('href', 'article-details.html');
+  readMore.textContent = ' click to continue reading...';
+  content.appendChild(readMore);
+
 
   articleHTML.appendChild(title);
   articleHTML.appendChild(ul);
