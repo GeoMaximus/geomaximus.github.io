@@ -1,2 +1,1 @@
-2. make the modal work (doesnt display on top of content)
 3. Add, Edit and Delete articles

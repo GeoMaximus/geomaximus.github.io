@@ -19,15 +19,11 @@ closeBtn.addEventListener('click', closeModal);
 fetchArticles();
 
 //CRUD AND FETCH
-async function fetchArticles() {
-  const res = await fetch('http://localhost:3000/articles');
-  if (!res.ok) {
-    const message = `An error occures: ${res.status}`;
-    throw new Error(message);
-  }
-
-  const articlePromise = await res.json().then((res) => {
-    renderArticles(res);
+ function fetchArticles() {
+  fetch('http://localhost:3000/articles').then(function (res) {
+    res.json().then(function (articles) {
+      renderArticles(articles);
+    });
   });
 }
 
@@ -43,18 +39,23 @@ function createArticle(article) {
   const title = document.createElement('h1');
   title.textContent = article.title;
   const ul = document.createElement('ul');
+  ul.className = 'info';
   const liTag = document.createElement('li');
+  liTag.className = 'info_item';
   liTag.textContent = article.tag;
-  const spanText = document.createElement('span');
-  spanText.textContent = "Added by ";
-  const liAuthor = document.createElement('li');
-  liAuthor.textContent = article.author;
+  const liText = document.createElement('li');
+  liText.className = 'info_item';
+  liText.textContent = "Added by ";
+  const spanAuthor = document.createElement('span');
+  spanAuthor.textContent = article.author;
+  spanAuthor.className = 'info_mark';
   const liDate = document.createElement('li');
   liDate.textContent = article.date;
+  liDate.className = 'info_item';
 
+  liText.appendChild(spanAuthor);
   ul.appendChild(liTag);
-  liAuthor.appendChild(spanText);
-  ul.appendChild(liAuthor);
+  ul.appendChild(liText);
   ul.appendChild(liDate);
 
   const btnDiv = document.createElement('div');
@@ -69,8 +70,8 @@ function createArticle(article) {
 
 
   const deleteBtn = document.createElement('button');
-  editBtn.className = 'action_btn';
-  editBtn.textContent = 'DELETE';
+  deleteBtn.className = 'action_btn';
+  deleteBtn.textContent = 'DELETE';
   deleteBtn.addEventListener('click', () => {
     deleteArticleFromServer(article);
   });
@@ -82,6 +83,7 @@ function createArticle(article) {
   img.src = article.imgUrl;
 
   const content = document.createElement('p');
+  content.className = 'article_container';
   content.textContent = article.summary;
 
   articleHTML.appendChild(title);
