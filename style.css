@@ -152,10 +152,10 @@ a {
 }
 
 .content {
-    display: flex;
+    /* display: flex; */
     margin: 80px auto 100px;
     width: 800px;
-    height: 200px;
+    height: auto;
     text-align: center;
 }
 
@@ -166,12 +166,13 @@ a {
 
 .article-container {
     text-align: center;
+    width: auto;
 }
 
 .footer {
     display: flex;
     justify-content: space-between;
-    margin: 35px 0px 100px 0px;
+    margin: 35px 71px 100px 71px;
 }
 
 .footer_link {
