@@ -278,12 +278,12 @@ prevArticle.addEventListener('click', redirectToPrev);
 nextArticle.addEventListener('click', redirectToNext);
 
 function redirectToPrev() {
-  window.location.replace("/article-details.html/?id=" + (id - 1));
+  window.location.replace("/article-details.html?id=" + (id - 1));
   getArticleFromServer();
 }
 
 function redirectToNext() {
-  window.location.replace("/article-details.html/?id=" + (parseInt(id) + 1));
+  window.location.replace("/article-details.html?id=" + (parseInt(id) + 1));
   getArticleFromServer();
 }
 
