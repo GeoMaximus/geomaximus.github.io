@@ -274,5 +274,6 @@ function computeSummary(content) {
   return content.substring(0, 1000);
 }
 
-
 getArticlesFromServer();
+
+//must add pagination and eventListener for prev and next

@@ -277,14 +277,19 @@ const nextArticle = document.getElementById('next-article');
 prevArticle.addEventListener('click', redirectToPrev);
 nextArticle.addEventListener('click', redirectToNext);
 
+//must add condition for id to make sure it exists
 function redirectToPrev() {
+  if(id > 0) {
   window.location.replace("/article-details.html?id=" + (id - 1));
   getArticleFromServer();
+  }
 }
 
 function redirectToNext() {
+  if (id > 0) {
   window.location.replace("/article-details.html?id=" + (parseInt(id) + 1));
   getArticleFromServer();
+  }
 }
 
 getArticleFromServer();
