@@ -48,7 +48,8 @@ async function addArticleToServer() {
     author: inputAuthor.value,
     date: inputDate.value,
     imgUrl: inputImgUrl.value,
-    content: inputContent.value
+    content: inputContent.value,
+    summary: computeSummary(inputContent.value)
   }
 
   const response = await fetch('http://localhost:3000/articles', {
@@ -97,7 +98,8 @@ async function updateArticleToServer(id) {
     author: inputAuthor.value,
     date: inputDate.value,
     imgUrl: inputImgUrl.value,
-    content: inputContent.value
+    content: inputContent.value,
+    summary: computeSummary(inputContent.value)
   }
 
   const response = await fetch('http://localhost:3000/articles/' + id, {
@@ -153,6 +155,7 @@ function removeOldArticles() {
 function createArticle(article) {
   //create article node
   const articleHTML = document.createElement('article');
+  articleHTML.className = 'article-container';
 
   //create title
   const title = document.createElement('h1');
@@ -216,15 +219,18 @@ function createArticle(article) {
   img.setAttribute('src', article.imgUrl);
 
   //add paragraph
+  const contentDiv = document.createElement('div');
+  contentDiv.className = 'content';
   const content = document.createElement('p');
-  content.className = 'article_container';
-  content.textContent = article.summary;
+  content.className = 'article-container';
+  content.textContent = computeSummary(article.content);
+  contentDiv.appendChild(content);
 
   articleHTML.appendChild(title);
   articleHTML.appendChild(ul);
   articleHTML.appendChild(btnDiv);
   articleHTML.appendChild(img);
-  articleHTML.appendChild(content);
+  articleHTML.appendChild(contentDiv);
 
   return articleHTML;
 
@@ -235,8 +241,8 @@ function renderArticles(articles) {
   removeOldArticles();
 
   articles.forEach(article => {
-   let articleNode = createArticle(article);
-   main.appendChild(articleNode);
+    let articleNode = createArticle(article);
+    main.appendChild(articleNode);
   })
 }
 
@@ -257,6 +263,10 @@ function clearSaveButtonEvents() {
 
 function closeModal() {
   body.className = '';
+}
+
+function computeSummary(content) {
+  return content.substring(1, 1000);
 }
 
 
