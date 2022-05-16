@@ -13,7 +13,7 @@
     <title>My Blog</title>
 </head>
 
-<body>
+<body id="body">
     <div class="container">
         <nav class="nav">
             <ul class="nav_container">
@@ -34,31 +34,34 @@
         <div class="add">
             <button type="button" id="button_add" class="btn">Add article</button>
         </div>
-        <main class="main"></main>
+        <main id="main" class="main"></main>
     </div>
     <footer class="footer">
         <a href="#" class="footer_link">previous</a>
         <a href="#" class="footer_link">next</a>
     </footer>
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h1 class="title">Add/Edit article</h1>
-            <div class="inputs__container">
-                <input type="text" name="title" class="input" placeholder="Please enter title">
-                <input type="text" name="tag" class="input" placeholder="Please enter tag">
-                <input type="text" name="author" class="input" placeholder="Please enter author">
-                <input type="text" name="date" class="input" placeholder="Please enter date">
-                <input type="text" name="imgUrl" class="input img" placeholder="Please enter image url">
-            </div>
-            <textarea class="textarea" name="content" cols="28" rows="7" placeholder="Please enter content"></textarea>
-            <div class="modal__buttons">
-                <button type="button" class="btn">Cancel</button>
-                <button type="button" class="btn button--pink">Save</button>
+    </div>
+    <div class="modal_overlay">
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span id='close' class="close">&times;</span>
+                <h1 class="title">Add/Edit article</h1>
+                <div class="inputs__container">
+                    <input type="text" name="title" class="input" placeholder="Please enter title">
+                    <input type="text" name="tag" class="input" placeholder="Please enter tag">
+                    <input type="text" name="author" class="input" placeholder="Please enter author">
+                    <input type="text" name="date" class="input" placeholder="Please enter date">
+                    <input type="text" name="imgUrl" class="input img" placeholder="Please enter image url">
+                </div>
+                <textarea class="textarea" name="content" cols="28" rows="7"
+                    placeholder="Please enter content"></textarea>
+                <div class="modal__buttons">
+                    <button id='cancel' type="button" class="btn">Cancel</button>
+                    <button id='save' type="button" class="btn button--pink">Save</button>
+                </div>
             </div>
         </div>
     </div>
-    <script src="index.js"></script>
 </body>
-
+<script src="index.js"></script>
 </html>

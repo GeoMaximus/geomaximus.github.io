@@ -1,27 +1,27 @@
-const main = document.getElementsByClassName('main')[0];
+const body = document.getElementById('body');
+const main = document.getElementById('main');
 const modal = document.getElementById('modal');
 const addBtn = document.getElementById('button_add');
-const cancelBtn = document.getElementsByClassName('btn')[0];
+const cancelBtn = document.getElementById('cancel');
+const closeBtn = document.getElementById('close');
 
 //MODAL
-addBtn.addEventListener('click', function (e) {
-  e.preventDefault();
-  modal.classList.remove("modal");
-});
-
-window.onclick = function(e) {
-  e.preventDefault();
-  if(e.target == modal) {
-    modal.style.display = 'none';
-  }
+function openAddModal() {
+  body.className = 'show-modal';
 }
+function closeModal() {
+  body.className = '';
+}
+addBtn.addEventListener('click', openAddModal);
+cancelBtn.addEventListener('click', closeModal);
+closeBtn.addEventListener('click', closeModal);
 
 fetchArticles();
 
 //CRUD AND FETCH
 async function fetchArticles() {
   const res = await fetch('http://localhost:3000/articles');
-  if(!res.ok) {
+  if (!res.ok) {
     const message = `An error occures: ${res.status}`;
     throw new Error(message);
   }
@@ -64,33 +64,63 @@ function createArticle(article) {
   editBtn.className = 'action_btn';
   editBtn.textContent = 'EDIT';
   editBtn.addEventListener('click', () => {
-    editArticle(article);
+    updateArticleToServer(article);
   });
 
 
   const deleteBtn = document.createElement('button');
   editBtn.className = 'action_btn';
   editBtn.textContent = 'DELETE';
-deleteBtn.addEventListener('click', () => {
-  deleteArticle(article);
-});
+  deleteBtn.addEventListener('click', () => {
+    deleteArticleFromServer(article);
+  });
 
-btnDiv.appendChild(editBtn);
-btnDiv.appendChild(deleteBtn);
+  btnDiv.appendChild(editBtn);
+  btnDiv.appendChild(deleteBtn);
 
-const img = document.createElement('img');
-img.src = article.imgUrl;
+  const img = document.createElement('img');
+  img.src = article.imgUrl;
 
-const content = document.createElement('p');
-content.textContent = article.summary;
+  const content = document.createElement('p');
+  content.textContent = article.summary;
 
-articleHTML.appendChild(title);
-articleHTML.appendChild(ul);
-articleHTML.appendChild(btnDiv);
-articleHTML.appendChild(img);
-articleHTML.appendChild(content);
+  articleHTML.appendChild(title);
+  articleHTML.appendChild(ul);
+  articleHTML.appendChild(btnDiv);
+  articleHTML.appendChild(img);
+  articleHTML.appendChild(content);
 
-main.appendChild(articleHTML);
+  main.appendChild(articleHTML);
+
+}
+
+async function deleteArticleFromServer(id) {
+  //check if it works, before it was article instead of id and article.id
+  const response = await fetch('http://localhost:3000/articles/' + id, {
+    method: 'DELETE',
+    headers: {
+      "Content-Type": "application/json"
+    },
+  });
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
+  await response.json().then(() => {
+    fetchArticles();
+  });
+}
+
+async function updateArticleToServer(id) {
+
+}
+
+async function addArticleToServer() {
+
+}
+
+function resetForm() {
 
 }
 

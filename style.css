@@ -160,7 +160,7 @@ p {
 }
 
 .footer_link {
-    color:#1e1e1e;
+    color: #1e1e1e;
     font-family: 'Montserrat', sans-serif;
     font-size: 34px;
     line-height: 1.2;
@@ -170,10 +170,18 @@ p {
 /* -----------
 
 /* The Modal (background) */
-.modal {
+.show-modal {
+    overflow: hidden;
+}
+
+.show-modal .modal_overlay {
+    display: flex;
+}
+
+.modal_overlay {
     background-color: rgba(0, 0, 0, 0.4);
-    border: 1px solid #9B9B9b;
-    display: none; 
+    /* border: 1px solid #9B9B9B; */
+    display: none;
     /* display: flex; */
     position: fixed;
     z-index: 1;
@@ -185,32 +193,32 @@ p {
     align-items: center;
     justify-content: center;
 
-  }
-  
-.modal-content {
-    display: block;
-    background-color: #fefefe;
-    margin: 15% auto; 
-    border: 1px solid #888;
-    height: 750px;
+}
+
+.modal {
     width: 1000px;
-    padding: 50px 75px;
+    height: 750px;
+    background: #fefefe;
     box-shadow: 0 0 26px 6px;
-  }
-  
+}
+
+.modal-content {
+    padding: 50px 75px;
+}
+
 .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-  }
-  
+}
+
 .close:hover,
 .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
-  }
+}
 
 .inputs__container {
     display: flex;
@@ -220,8 +228,6 @@ p {
 }
 
 .input {
-    display: block;
-    justify-content: flex-end;
     width: 400px;
     height: 35px;
     border: 1px solid #9b9b9b;
@@ -247,14 +253,15 @@ p {
     width: 100%;
     box-sizing: border-box;
     padding-left: 10px;
+    overflow: auto;
 }
 
 .modal__buttons {
-    margin: 130px 0 90px 0;
+    /* margin: 130px 0 90px 0; */
     display: flex;
     justify-content: space-between;
     margin-top: 50px;
-    margin-bottom: 50px;
+    /* margin-bottom: 50px; */
 }
 
 .button--pink {
