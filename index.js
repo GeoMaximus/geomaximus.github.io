@@ -1,103 +1,78 @@
+//getting elemens
 const body = document.getElementById('body');
 const main = document.getElementById('main');
-const modal = document.getElementById('modal');
+
+//getting buttons
 const addBtn = document.getElementById('button_add');
 const cancelBtn = document.getElementById('cancel');
 const closeBtn = document.getElementById('close');
+let saveBtn = document.getElementById('save');
 
-//MODAL
-function openAddModal() {
-  body.className = 'show-modal';
-}
-function closeModal() {
-  body.className = '';
-}
+//getting modal inputs
+const inputTitle = document.getElementById('inputTitle');
+const inputTag = document.getElementById('inputTag');
+const inputAuthor = document.getElementById('inputAuthor');
+const inputDate = document.getElementById('inputDate');
+const inputImgUrl = document.getElementById('inputImgUrl');
+const inputContent = document.getElementById('inputContent');
+
 addBtn.addEventListener('click', openAddModal);
 cancelBtn.addEventListener('click', closeModal);
 closeBtn.addEventListener('click', closeModal);
 
-fetchArticles();
 
-//CRUD AND FETCH
- function fetchArticles() {
-  fetch('http://localhost:3000/articles').then(function (res) {
-    res.json().then(function (articles) {
-      renderArticles(articles);
-    });
+//FETCH ARTICLES FROM SERVER
+async function getArticlesFromServer() {
+  const response = await fetch('http://localhost:3000/articles', {
+    method: "GET",
+    headers: {
+      "Content-type": "application/json"
+    }
+  });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
+  await response.json().then((response) => {
+    renderArticles(response);
+  });
+};
+
+//POST article to server
+async function addArticleToServer() {
+  const article = {
+    title: inputTitle.value,
+    tag: inputTag.value,
+    author: inputAuthor.value,
+    date: inputDate.value,
+    imgUrl: inputImgUrl.value,
+    content: inputContent.value
+  }
+
+  const response = await fetch('http://localhost:3000/articles', {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify(article)
+  });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
+  await response.json().then(() => {
+    getArticlesFromServer();
+    resetForm();
+    closeModal();
   });
 }
 
-function renderArticles(articles) {
-  console.log(articles);
-  articles.forEach(article => {
-    createArticle(article);
-  })
-}
-
-function createArticle(article) {
-  const articleHTML = document.createElement('article');
-  const title = document.createElement('h1');
-  title.textContent = article.title;
-  const ul = document.createElement('ul');
-  ul.className = 'info';
-  const liTag = document.createElement('li');
-  liTag.className = 'info_item';
-  liTag.textContent = article.tag;
-  const liText = document.createElement('li');
-  liText.className = 'info_item';
-  liText.textContent = "Added by ";
-  const spanAuthor = document.createElement('span');
-  spanAuthor.textContent = article.author;
-  spanAuthor.className = 'info_mark';
-  const liDate = document.createElement('li');
-  liDate.textContent = article.date;
-  liDate.className = 'info_item';
-
-  liText.appendChild(spanAuthor);
-  ul.appendChild(liTag);
-  ul.appendChild(liText);
-  ul.appendChild(liDate);
-
-  const btnDiv = document.createElement('div');
-  btnDiv.className = 'action_buttons';
-
-  const editBtn = document.createElement('button');
-  editBtn.className = 'action_btn';
-  editBtn.textContent = 'EDIT';
-  editBtn.addEventListener('click', () => {
-    updateArticleToServer(article);
-  });
-
-
-  const deleteBtn = document.createElement('button');
-  deleteBtn.className = 'action_btn';
-  deleteBtn.textContent = 'DELETE';
-  deleteBtn.addEventListener('click', () => {
-    deleteArticleFromServer(article);
-  });
-
-  btnDiv.appendChild(editBtn);
-  btnDiv.appendChild(deleteBtn);
-
-  const img = document.createElement('img');
-  img.src = article.imgUrl;
-
-  const content = document.createElement('p');
-  content.className = 'article_container';
-  content.textContent = article.summary;
-
-  articleHTML.appendChild(title);
-  articleHTML.appendChild(ul);
-  articleHTML.appendChild(btnDiv);
-  articleHTML.appendChild(img);
-  articleHTML.appendChild(content);
-
-  main.appendChild(articleHTML);
-
-}
-
+//DELETE ARTICLE FROM SERVER
 async function deleteArticleFromServer(id) {
-  //check if it works, before it was article instead of id and article.id
   const response = await fetch('http://localhost:3000/articles/' + id, {
     method: 'DELETE',
     headers: {
@@ -110,19 +85,179 @@ async function deleteArticleFromServer(id) {
   }
 
   await response.json().then(() => {
-    fetchArticles();
+    getArticlesFromServer();
   });
 }
 
+//UPDATE ARTICLE FROM SERVER
 async function updateArticleToServer(id) {
+  const article = {
+    title: inputTitle.value,
+    tag: inputTag.value,
+    author: inputAuthor.value,
+    date: inputDate.value,
+    imgUrl: inputImgUrl.value,
+    content: inputContent.value
+  }
+
+  const response = await fetch('http://localhost:3000/articles/' + id, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(article)
+  });
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  await response.json().then(() => {
+    getArticlesFromServer();
+    resetForm();
+    closeModal();
+  });
+}
+
+function openAddModal() {
+  clearSaveButtonEvents();
+  saveBtn.addEventListener('click', function () {
+    addArticleToServer()
+  });
+
+  body.className = 'show-modal';
+}
+
+function openEditModal(article) {
+  inputTitle.value = article.title;
+  inputTag.value = article.tag;
+  inputAuthor.value = article.author;
+  inputDate.value = article.date;
+  inputImgUrl.value = article.imgUrl;
+  inputContent.value = article.content;
+
+  clearSaveButtonEvents();
+
+  saveBtn.addEventListener('click', function () {
+    updateArticleToServer(article.id);
+  });
+
+  body.className = 'show-modal';
+}
+
+function removeOldArticles() {
+  while (main.firstChild) {
+    main.removeChild(main.firstChild);
+  }
+}
+
+function createArticle(article) {
+  //create article node
+  const articleHTML = document.createElement('article');
+
+  //create title
+  const title = document.createElement('h1');
+  title.textContent = article.title;
+
+  //create ul element for info
+  const ul = document.createElement('ul');
+  ul.className = 'info';
+
+  //create tag
+  const liTag = document.createElement('li');
+  liTag.className = 'info_item';
+  liTag.textContent = article.tag;
+
+  //create added by
+  const liText = document.createElement('li');
+  liText.className = 'info_item';
+  liText.textContent = "Added by ";
+
+  //create author
+  const spanAuthor = document.createElement('span');
+  spanAuthor.textContent = article.author;
+  spanAuthor.className = 'info_mark';
+
+  //create date
+  const liDate = document.createElement('li');
+  liDate.textContent = article.date;
+  liDate.className = 'info_item';
+
+  liText.appendChild(spanAuthor);
+  ul.appendChild(liTag);
+  ul.appendChild(liText);
+  ul.appendChild(liDate);
+
+  //div for buttons
+  const btnDiv = document.createElement('div');
+  btnDiv.className = 'action_buttons';
+
+
+  //edit button
+  const editBtn = document.createElement('button');
+  editBtn.className = 'action_btn';
+  editBtn.textContent = 'EDIT';
+  editBtn.addEventListener('click', function () {
+    openEditModal(article);
+  });
+
+  //delete button
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'action_btn';
+  deleteBtn.textContent = 'DELETE';
+  deleteBtn.addEventListener('click', function () {
+    deleteArticleFromServer(article.id);
+  });
+
+  btnDiv.appendChild(editBtn);
+  btnDiv.appendChild(deleteBtn);
+
+  //add image
+  const img = document.createElement('img');
+  img.setAttribute('src', article.imgUrl);
+
+  //add paragraph
+  const content = document.createElement('p');
+  content.className = 'article_container';
+  content.textContent = article.summary;
+
+  articleHTML.appendChild(title);
+  articleHTML.appendChild(ul);
+  articleHTML.appendChild(btnDiv);
+  articleHTML.appendChild(img);
+  articleHTML.appendChild(content);
+
+  return articleHTML;
 
 }
 
-async function addArticleToServer() {
 
+function renderArticles(articles) {
+  removeOldArticles();
+
+  articles.forEach(article => {
+   let articleNode = createArticle(article);
+   main.appendChild(articleNode);
+  })
 }
 
 function resetForm() {
-
+  inputTitle.value = "";
+  inputTag.value = "";
+  inputAuthor.value = "";
+  inputDate.value = "";
+  inputImgUrl.value = "";
+  inputContent.value = "";
 }
 
+function clearSaveButtonEvents() {
+  let newUpdateButton = saveBtn.cloneNode(true);
+  saveBtn.parentNode.replaceChild(newUpdateButton, saveBtn);
+  saveBtn = document.getElementById('save');
+}
+
+function closeModal() {
+  body.className = '';
+}
+
+
+getArticlesFromServer();
