@@ -266,7 +266,7 @@ function closeModal() {
 }
 
 function computeSummary(content) {
-  return content.substring(1, 1000);
+  return content.substring(0, 1000);
 }
 
 
